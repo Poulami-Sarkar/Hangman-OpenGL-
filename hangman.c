@@ -1,178 +1,233 @@
 // C program to illustrate OpenGL game
 #include<stdio.h>
-#include<GL/glut.h>
+#include <GLUT/glut.h>
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
 #include<math.h>
-#define pi 3.142857
+#include<string.h>   /*<string.h> for strcmp();,strlen(); functions use*/
+#include<stdlib.h>
 
-// Global Declaration
-// c and d tracks the number of time 'b' and 'n' pressed respectively
-// left and right indicates leftmost and rightmost index of movable rectangle
-int c = 0, d = 0, left = 0, right = 0;
-int m = 0, j = 1, flag1 = 0, l = 1, flag2 = 0, n = 0, score = 0, count = 1;
+void showHangman(int);
 
-// Initialization function
-void myInit (void)
+int main(void)
 {
-	// Reset background color with white (since all three argument is 1.0)
-	glClearColor(1.0, 1.0, 1.0, 0.0);
+    char hangmanWord[100], tempWord[100];       /**hangmanWord[] array for the original word and tempWord[] array to get the alphabet from user and compare it with original word**/
+    char hangmanOutput[100];                    /**This array will show the remaining blanks and correct inputs**/
+    int wrongTry = 6 , matchFound = 0;          /**player will get 5 chance, so we use wrongTry as chance counter**/
+                                                /**matchFound to search the alphabet, if the alphabet from user does not exist
+                                                in the original word it will remain 0, upon finding the word, matchFound will
+                                                be set as 1**/
+    int counter = 0 , position = 0, winner, length , i;
+    char alphabetFromUser;
 
-	// Set picture color to red (in RGB model)
-	// as only argument corresponding to R (Red) is 1.0 and rest are 0.0
-	glColor3f(1.0f, 0.0f, 0.0f);
+    system("cls");                              /**for clearing the screen**/
+    printf("\n\n Enter any word in small case and hit >>ENTER<<");
+    printf("\n\n\t Enter HERE ==>  ");
+    scanf("%s",hangmanWord);                    /**get the string from opponent**/
+    printf("\n\n Now give the COMPUTER to your friend and see if he/she can CRACK it!!!");
+    printf("\n\n\tHIT >>ENTER<<");
+    getchar();                                  /**hold the computer screen**/
+    length = strlen(hangmanWord);               /**get the length of the word**/
 
-	// Set width of point to one unit
-	glPointSize(1.0);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+    system("cls");
 
-	// Set window size in X- and Y- direction
-	gluOrtho2D(-620.0, 620.0, -340.0, 340.0);
-}
+    printf("\n\n !!!!!!!!!!!!!!!!!!!Welcome to the HANGMAN GAME!!!!!!!!!!!!!!!!!\n\n\n");   /**Brief description of the game**/
+    printf("\n\n You will get 5 chances to guess the right word");
+    printf("\n\n So help the Man and get...set...GO..!!");
 
-// keyboard function : it gets active when button pressed
-void keyboard(unsigned char key, int x, int y)
-{
-	left = -200 + 200 * (d - c);
-	right = 200 + 200 * (d - c);
+    getchar();
 
-	// if leftmost index of window is hit
-	// then rectangle will not move to left on furthure pressing of b
-	// only it will move to right on pressing n
-	if (left == -600)
-	{
-		// '110' -> Ascii value of 'n'
-		// so d is incremented when n is pressed
-		if (key == 110)
-			d++;
-	}
-	// if rightmost index of window is hit
-	// then rectangle will not move to right on furthure pressing of n
-	// only it will move to left on pressing b
-	else if (right == 600)
-	{
-		// '98' -> Ascii value of 'b'
-		// so c is incremented when b is pressed
-		if (key == 98)
-			c++;
-	}
-	// when rectangle is in middle, then it will move into both
-	// direction depending upon pressed key
-	else
-	{
-		if (key == 98)
-			c++;
-		if (key == 110)
-			d++;
-	}
-	glutPostRedisplay();
-}
+    printf("\n\n\tHIT >>ENTER<< ");
 
-void myDisplay(void)
-{
-	// x and y keeps point on circumference of circle
-	int x, y, k;
-	// outer 'for loop' is to for making motion in ball
-	for (k = 0; k <= 400; k += 5)
-	{
-		glClear(GL_COLOR_BUFFER_BIT);
-		glBegin(GL_LINE_STRIP);
-		// i keeps track of angle
-		float i = 0;
-		// change in m denotes motion in vertical direction and
-		// change in n denotes motion in horizontal direction
-		m = m + 6;
-		n = n + 4;
-		// drawing of circle centre at (0, 12) iterated up to 2*pi, i.e., 360 degree
-		while (i <= 2 * pi)
-		{
-			y = 12 + 20 * cos(i);
-			x = 20 * sin(i);
-			i = i + 0.1;
-			// flag1 is 0 to show motion in upward direction and is 1 for downward direction
-			if (m == 288 && flag1 == 0)
-			{
-				j = -1;
-				m = -288;
-				flag1 = 1;
-				score++;
-			}
-			if (m == 288 && flag1 == 1)
-			{
-				j = 1;
-				m = -288;
-				flag1 = 0;
-			}
-			// flag2 is 0 to show motion in rightward direction and is 1 for leftward direction
-			if (n == 580 && flag2 == 0)
-			{
-				l = -1;
-				n = -580;
-				flag2 = 1;
-			}
-			if (n == 580 && flag2 == 1)
-			{
-				l = 1;
-				n = -580;
-				flag2 = 0;
-			}
-			// equation for desired motion of ball
-			glVertex2i((x - l * n), (y - j * m));
-		}
-		glEnd();
+    getchar();
 
-		// these four points draws outer rectangle which determines window
-		glBegin(GL_LINE_LOOP);
-			glVertex2i(-600, -320);
-			glVertex2i(-600, 320);
-			glVertex2i(600, 320);
-			glVertex2i(600, -320);
-		glEnd();
+    system("cls");
 
-		// these four points draws smaller rectangle which is for catching ball
-		glBegin(GL_LINE_LOOP);
-		left = -200 + 200 * (d - c);
-		right = 200 + 200 * (d - c);
-			glVertex2i(left, -315);
-			glVertex2i(left, -295);
-			glVertex2i(right, -295);
-			glVertex2i(right, -315);
-		glEnd();
+        printf("\n\t||===== ");                 /**show the HANGMAN**/
+	printf("\n\t||    | ");
+        printf("\n\t||      ");
+        printf("\n\t||      ");
+        printf("\n\t||      ");
+        printf("\n\t||      ");
 
-		// following condition checks if falling ball is catched on rectangle or not
-		if ((j * m) == 276)
-		{
-			if ((left > ((-1 * l * n) + 20)) || (right < (-1 * l * n) - 20))
-			{
-				printf("Game Over !!!\nYour Score is :\t%d\n", score);
-				exit(0);
-			}
-		}
-		glutSwapBuffers();
-	}
-}
+    printf("\n\n     The word has %d alphabets \n\n",length);  /**tell the user how many alphabets the word has**/
+    for( i = 0; i < length ; i++)
+    {
+        hangmanOutput[i] = '_';
+        hangmanOutput[length] = '\0';
+    }
+
+    for(i = 0 ; i < length ; i++)
+    {
+        printf(" ");
+        printf("%c",hangmanOutput[i]);        /**Show the Word With n(length of the original word) number of underscores (_)**/
+
+    }
+    while(wrongTry != 0)                        /**while loop for exiting the program when no try left**/
+    {
+        matchFound = 0;
+        printf("\n\n   enter any alphabet from a to z and please use small case!!");
+        printf("\n\n\t Enter HERE ==> ");
+
+	    fflush(stdin);
+
+	    scanf("%c",&alphabetFromUser);            /**get alphabet from user**/
+    if(alphabetFromUser < 'a' || alphabetFromUser > 'z') /**In case player gives input other than 'a' to 'z' the console will ask again**/
+    {
+        system("cls");
+        printf("\n\n\t Wrong input TRY AGAIN ");
+        matchFound = 2;
+    }
+    fflush(stdin);
+    if (matchFound != 2)
+    {
+        for(counter=0;counter<length;counter++)    /**for loop to check whether player input alphabet exists or not in the word**/
+	    {
+		    if(alphabetFromUser==hangmanWord[counter])
+		     {
+		       matchFound = 1;
+                     }//end of if()
+            }//end of for()
+
+	   if(matchFound == 0)                      /**in case of wrong guess**/
+	    {
+     	      printf("\n\t :( You have %d tries left ",--wrongTry);
+	          getchar();
+              showHangman(wrongTry);
+              getchar();
+	    }//end of if()
+
+	   else
+	   {
+	     for(counter = 0; counter < length; counter++)
+             {
+     	         matchFound = 0;
+                 if(alphabetFromUser == hangmanWord[counter])
+	          {
+     		     position = counter ;
+     		     matchFound = 1;
+	          }//end of if
+    	      if(matchFound == 1)
+	          {
+                 for(i = 0 ; i < length ; i++)
+                 {
+                      if( i == position)
+                  	  {
+                          hangmanOutput[i] = alphabetFromUser; /**Put the alphabet at right position**/
+                      }
+                      else if( hangmanOutput[i] >= 'a' && hangmanOutput[i] <= 'z' ) /** If the position already occupied
+                                                                                  by same alphabet then no need to
+                                                                                  fill again EASY!! and continue */
+                      {
+                          continue;
+                  	  }
+
+                      else
+                      {
+                          hangmanOutput[i] = '_';            /** Put a blank at not guessed alphabet position **/
+                      }
+                }
+                tempWord[position] = alphabetFromUser;      /**put the alphabet in another char array to check with the original word**/
+                tempWord[length] = '\0';                    /**put the NULL character at the end of the temp string**/
+                winner = strcmp(tempWord,hangmanWord);      /**upon True comparison it will return 0**/
+
+                if(winner == 0)                             /**if the player guessed the whole word right then he/she is the WINNER**/
+                {
+                    printf("\n\n\t \t YAHOO!!!!! You are the WINNER !!!!!");
+                    printf("\n\n\t The Word was %s ",hangmanWord);
+                    printf("\n\n\n\n\t\tEASY HUH???\n\n");
+                    getchar();
+                    return 0;
+                }//end of inner if
+	       }//end of outer if
+	    }//end of for loop
+      }//end of else
+     }// end of if(matchFound != 2) condition
+
+    printf("\n\n\t");
+    for(i = 0 ; i < length ; i++)
+      {
+          printf(" ");
+          printf("%c",hangmanOutput[i]);                /**Show the original Word With blanks and right Input alphabet**/
+      }
+
+    getchar();
+    }//end of while loop
+
+      if(wrongTry <= 0)                                 /**if the player can not guess the whole word in 5 chaces**/
+      {
+          printf("\n\n\t The Word was %s ",hangmanWord);
+          printf("\n\n\t The man is dead you IDIOT!!!!!");
+	      printf("\n\n\t Better luck next!!!");
+
+      }
+getchar();
+return 0;
+}//end of main();
 
 
-// Driver Program
-int main (int argc, char** argv)
-{
-	glutInit(&argc, argv);
 
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
-	// Declares window size
-	glutInitWindowSize(1100, 600);
+void showHangman(int choice)                            /**This function show the hangman after each wrong try**/
+ {
 
-	// Declares window position which is (0, 0)
-	// means lower left corner will indicate position (0, 0)
-	glutInitWindowPosition(0, 0);
+     switch(choice)
+     {
 
-	// Name to window
-	glutCreateWindow("Game");
-
-	// keyboard function
-	glutKeyboardFunc(keyboard);
-	// Call to myInit()
-	myInit();
-	glutDisplayFunc(myDisplay);
-	glutMainLoop();
-}
+     case 0:
+         system("cls");
+	printf("\n\t||===== ");
+	printf("\n\t||    | ");
+	printf("\n\t||   %cO/",'\\');
+	printf("\n\t||    | ");
+	printf("\n\t||   / %c",'\\');
+	printf("\n\t||      ");
+	break;
+     case 1:
+         system("cls");
+	printf("\n\t||===== ");
+	printf("\n\t||    | ");
+	printf("\n\t||   %cO/",'\\');
+	printf("\n\t||    | ");
+	printf("\n\t||     %c",'\\');
+	printf("\n\t||      ");
+	break;
+     case 2:
+         system("cls");
+	printf("\n\t||===== ");
+	printf("\n\t||    | ");
+	printf("\n\t||   %cO/",'\\');
+	printf("\n\t||    | ");
+	printf("\n\t||      ");
+	printf("\n\t||      ");
+	break;
+     case 3:
+         system("cls");
+	printf("\n\t||===== ");
+	printf("\n\t||    | ");
+	printf("\n\t||   %cO/",'\\');
+	printf("\n\t||      ");
+	printf("\n\t||      ");
+	printf("\n\t||      ");
+	break;
+     case 4:
+         system("cls");
+	printf("\n\t||===== ");
+	printf("\n\t||    | ");
+	printf("\n\t||   %cO ",'\\');
+	printf("\n\t||      ");
+	printf("\n\t||      ");
+	printf("\n\t||      ");
+	break;
+     case 5:
+         system("cls");
+	printf("\n\t||===== ");
+	printf("\n\t||    | ");
+	printf("\n\t||    O ");
+	printf("\n\t||      ");
+	printf("\n\t||      ");
+	printf("\n\t||      ");
+	break;
+      }//end of switch-case
+      return;
+ }
 
