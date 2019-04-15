@@ -97,7 +97,7 @@ void display(){
         draw_line(30,20,30,50);
         draw_line(30,50,10,35);
         draw_line(30,50,50,35);
-        text(100,200,"LOSER LOSER YOU STUPID OLD GEEZER. Press any key to exit");        
+        text(10,200,"LOSER LOSER YOU STUPID OLD GEEZER. Press any key to exit");        
     }
     //glutSolidTeaPot(0.08);
     text(100,300,tempWord);
