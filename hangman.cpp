@@ -6,6 +6,7 @@
 #include<math.h>
 #include<string.h>   /*<string.h> for strcmp();,strlen(); functions use*/
 #include<stdlib.h>
+#include <unistd.h>
 
 //#include "hang.h"
 
@@ -14,7 +15,7 @@ char hangmanWord[100] ="i like big butts and cannot lie";
 char tempWord[100]    ="- ---- --- ----- --- ------ ---" ;
 void showHangman(int);
 
-void text()
+void text(GLfloat x,GLfloat y,char * tempWord)
 {
     int len,i;
     char menu[80];
@@ -28,7 +29,7 @@ void text()
     glMatrixMode( GL_MODELVIEW );
     glPushMatrix();
     glLoadIdentity();
-    glRasterPos2i(100, 300);
+    glRasterPos2i(x, y);
     for ( i = 0; i < len; ++i )
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, menu[i]);
     glPopMatrix();
@@ -62,20 +63,9 @@ void draw_line(GLfloat x0,GLfloat y0, GLfloat x1,GLfloat y1){
     glEnd(); 
 }
 
-void displayword(float x, float y, float r, float g, float b, void* font, char *string)
-{
-  glColor3f(r, g, b );
-  glRasterPos2f(x, y);
-  int len, i;
-  len = (int)strlen(string);
-  for (i = 0; i < len; i++) {
-    glutBitmapCharacter(font, string[i]);
-  }
-}
-
 void display(){
     glClear(GL_COLOR_BUFFER_BIT);
-    displayword(-0.4,1.66,0.0,1.0,0.0,GLUT_BITMAP_HELVETICA_12,hangmanWord);
+    //displayword(-0.4,1.66,0.0,1.0,0.0,GLUT_BITMAP_HELVETICA_12,hangmanWord);
 
     if (wrongTry ==4)
         //body
@@ -107,9 +97,10 @@ void display(){
         draw_line(30,20,30,50);
         draw_line(30,50,10,35);
         draw_line(30,50,50,35);
+        text(100,200,"LOSER LOSER YOU STUPID OLD GEEZER. Press any key to exit");        
     }
     //glutSolidTeaPot(0.08);
-    text();
+    text(100,300,tempWord);
     glFlush();
     glutPostRedisplay();   
 }
@@ -123,6 +114,9 @@ void update(unsigned char key){
 
 void enter(unsigned char key,int x, int y){
     int f = 0;
+    if(wrongTry == 0)
+        exit(0);
+    //usleep(5000000);
     if(strchr(hangmanWord, key)){
         f=1;
         update(key);
@@ -146,7 +140,7 @@ int main(int argc,char **argv)
     glutCreateWindow("Hangman");
     init();
     glutKeyboardFunc(enter);
-    glutDisplayFunc(display);
+    glutDisplayFunc(display);    
     glutMainLoop();
     return 0;
 }
