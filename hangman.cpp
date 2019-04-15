@@ -11,19 +11,32 @@
 
 int wrongTry = 6;
 char hangmanWord[100] ="i like big butts and cannot lie";
-char tempWord[100];
+char tempWord[100]    ="- ---- --- ----- --- ------ ---" ;
 void showHangman(int);
 
-void text(float x, float y, float r, float g, float b, void* font, char *string)
+void text()
 {
-  glColor3f( r, g, b );
-  glRasterPos2f(x, y);
-  int len, i;
-  len = (int)strlen(string);
-  for (i = 0; i < len; i++) {
-    glutBitmapCharacter(font, string[i]);
-  }
+    int len,i;
+    char menu[80];
+    strcpy(menu,tempWord);
+    len = strlen(menu);
+    glColor3f(1,0,0);
+    glMatrixMode( GL_PROJECTION );
+    glPushMatrix();
+    glLoadIdentity();
+    gluOrtho2D( 0, 600, 0, 600 );
+    glMatrixMode( GL_MODELVIEW );
+    glPushMatrix();
+    glLoadIdentity();
+    glRasterPos2i(100, 300);
+    for ( i = 0; i < len; ++i )
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, menu[i]);
+    glPopMatrix();
+    glMatrixMode( GL_PROJECTION );
+    glPopMatrix();
+    glMatrixMode( GL_MODELVIEW );
 }
+
 
 void init() {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -51,7 +64,7 @@ void draw_line(GLfloat x0,GLfloat y0, GLfloat x1,GLfloat y1){
 
 void displayword(float x, float y, float r, float g, float b, void* font, char *string)
 {
-  glColor3f( r, g, b );
+  glColor3f(r, g, b );
   glRasterPos2f(x, y);
   int len, i;
   len = (int)strlen(string);
@@ -62,7 +75,7 @@ void displayword(float x, float y, float r, float g, float b, void* font, char *
 
 void display(){
     glClear(GL_COLOR_BUFFER_BIT);
-    displayword(-0.4,1.66,0.0,0.0,0.0,GLUT_BITMAP_HELVETICA_12,hangmanWord);
+    displayword(-0.4,1.66,0.0,1.0,0.0,GLUT_BITMAP_HELVETICA_12,hangmanWord);
 
     if (wrongTry ==4)
         //body
@@ -96,6 +109,7 @@ void display(){
         draw_line(30,50,50,35);
     }
     //glutSolidTeaPot(0.08);
+    text();
     glFlush();
     glutPostRedisplay();   
 }
