@@ -16,6 +16,8 @@
 #include <ctime> 
 #include <string.h>
 #include <string>
+#include <fstream>
+#include <sstream>
 //#include <unistd>
 
 #ifndef PI

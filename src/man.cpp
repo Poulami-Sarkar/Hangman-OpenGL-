@@ -10,6 +10,7 @@ void man::draw_line(GLfloat x0,GLfloat y0, GLfloat x1,GLfloat y1){
     glVertex2d(x0,y0);
     glVertex2d(x1,y1);
     glEnd(); 
+
 }
 
 void man::drawHead(){

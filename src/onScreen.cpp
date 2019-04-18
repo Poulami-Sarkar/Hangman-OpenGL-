@@ -3,12 +3,12 @@
 #include "../include/man.h"
 #include "../include/words.h"
 
-void onScreen::text(GLfloat x,GLfloat y,char * tempWord)
+void onScreen::text(GLfloat x,GLfloat y,char * updateWord)
 {
     int len,i;
     char menu[80];
-    strcpy(menu,tempWord);
-    len = strlen(tempWord);
+    strcpy(menu,updateWord);
+    len = strlen(updateWord);
     glColor3f(1,0,0);
     glMatrixMode( GL_PROJECTION );
     glPushMatrix();
@@ -18,8 +18,9 @@ void onScreen::text(GLfloat x,GLfloat y,char * tempWord)
     glPushMatrix();
     glLoadIdentity();
     glRasterPos2i(x, y);
+    glColor3f(1.0, 1.0, 0.0);
     for ( i = 0; i <len; ++i )
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, menu[i]);
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, menu[i]);
     glPopMatrix();
     glMatrixMode( GL_PROJECTION );
     glPopMatrix();
