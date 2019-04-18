@@ -14,11 +14,11 @@ void man::draw_line(GLfloat x0,GLfloat y0, GLfloat x1,GLfloat y1){
 }
 
 void man::drawHead(){
-	
+	glClearColor(0.0,0.0,0.0,1.0);
 	glPushMatrix();
 	glTranslatef(30,70,00);
 	glRotatef(30, 0, 0, 0.7);
-	glColor3f(1.0,0.0,0.0);
+	//glColor3f(1.0,0.0,0.0);
 	glutWireSphere(20,200,100);
 	glPopMatrix();
 }

@@ -127,6 +127,7 @@ void display(){
     showHint();
 	if(sumCheckWord == wordLen){
         onScreen::text(200,250,"You won the Game");
+        wrongTry = 999;
         glutPostRedisplay();
         onScreen::text(200,200,"Press 'ESC' to exit");       
     }
