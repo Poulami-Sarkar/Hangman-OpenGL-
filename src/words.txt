@@ -1,12 +1,12 @@
-interests
-prevaricate
-holidayin
-lacking
-acrimony
-iconoclast
-egregious
-laconic
-venerate
-auspicious
+prevaricate Speak in an evasive way
+cachophony A harsh dischordant mixture of sounds
+acrimony Bitterness and ill feeling
+iconoclast A person who critisizes cherished beliefs
+egregious Outstandingly bad or shocking
+laconic Using very few words
+venerate regard with great respect
+auspicious favourable
+castigate reprimand severely
+acumen The ability to make good judgemnets and decisions
 
-\
+

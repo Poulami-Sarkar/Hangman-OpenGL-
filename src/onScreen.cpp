@@ -9,7 +9,7 @@ void onScreen::text(GLfloat x,GLfloat y,char * updateWord)
     char menu[80];
     strcpy(menu,updateWord);
     len = strlen(updateWord);
-    glColor3f(1,0,0);
+    //glColor3f(1,0,0);
     glMatrixMode( GL_PROJECTION );
     glPushMatrix();
     glLoadIdentity();
@@ -18,7 +18,8 @@ void onScreen::text(GLfloat x,GLfloat y,char * updateWord)
     glPushMatrix();
     glLoadIdentity();
     glRasterPos2i(x, y);
-    glColor3f(1.0, 1.0, 0.0);
+    glScalef(0.2,0.2,11);
+    //glColor3f(1.0, 1.0, 0.0);
     for ( i = 0; i <len; ++i )
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, menu[i]);
     glPopMatrix();
