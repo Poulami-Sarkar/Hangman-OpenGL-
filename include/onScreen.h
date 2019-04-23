@@ -14,6 +14,8 @@ class onScreen{
 		static void text(float x, float y, char *string);
 		//static void init();
 		void drawPixel (int x, int y);
+		static void drawButton(int x0,int y0,int x1, int y1,char disp[]);
+		static void gameOverfun(char *hangmanword);
 		//static void display();
 
 };

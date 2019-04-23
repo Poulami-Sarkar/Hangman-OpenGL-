@@ -4,7 +4,7 @@
 //#include "../include/words.h"
 
 int wrongTry = 6,i = 0,wordLen,occur = 1,playGame = 0,xM,yM,instructions = 0,quit= 0,gameOver = 0; // The no of attempts given to the Player,occur is 1 : is already in entered text;
-char hangmanWord[20],updateWord[20],enteredText[50];// Stores the word that is chosen from the words.txt file
+// Stores the word that is chosen from the words.txt file
 char meaning[200];
 char output[100][2][100];
 man hm;                                 //Hanged man
@@ -14,46 +14,21 @@ void initialiseParams(){
     srand(time(NULL));
     random = (rand())%10;
     printf("The random no generated: %d\n",random);
-    strcpy(hangmanWord,output[random][0]);
+    strcpy(hm.w.hangmanWord,output[random][0]);
     strcpy(meaning,output[random][1]);
-    strncpy(enteredText,"",sizeof(enteredText));
-    strncpy(updateWord,"",sizeof(updateWord));
-    printf("The updateword: %s\n",updateWord);
-    printf("The hangman: %s\n",hangmanWord);
-    printf("The entered: %s\n",enteredText);
-    wordLen = strlen(hangmanWord);
+    strncpy(hm.w.enteredText,"",sizeof(hm.w.enteredText));
+    strncpy(hm.w.updateWord,"",sizeof(hm.w.updateWord));
+    printf("The updateword: %s\n",hm.w.updateWord);
+    printf("The hangman: %s\n",hm.w.hangmanWord);
+    printf("The entered: %s\n",hm.w.enteredText);
+    wordLen = strlen(hm.w.hangmanWord);
     wrongTry = 6;
     for (int i=0;i<wordLen;i++){
-        updateWord[i]='-';
+        hm.w.updateWord[i]='-';
     }
-    printf("The updateword: %s\n",updateWord);  
-}
-void drawButton(int x0,int y0,int x1, int y1,char disp[]){
-    glPushMatrix();
-        glColor4f(0.9, 0.9, 0.0,1.0);
-        glRecti (x0, y0, x1, y1);
-        glLineWidth(3.0);
-        glColor4f(0.7, 0.7, 0.1,1.0);
-        glBegin(GL_LINES);
-            glVertex2i(x0,y0);
-            glVertex2i(x1,y0);
-        glEnd(); 
-        glPushMatrix();
-
-        glColor4f(0.0,0.0,0.8,1.0);
-        onScreen::text(x0-70,y0-30,disp);
-        glPopMatrix();
-    glPopMatrix();
+    printf("The updateword: %s\n",hm.w.updateWord);  
 }
 
-void gameOverfun(){
-    glClear(GL_COLOR_BUFFER_BIT);
-    //glClearColor(1.0,1.0,1.0,0.3);
-    
-    onScreen::text(150,290,"You lost the game. Press any key to exit");
-    onScreen::text(200,260,"The word is:");
-    onScreen::text(300,260,hangmanWord);
-}
 void playGamefun(){
     // The box containing the updateWord
     glPushMatrix();
@@ -62,56 +37,56 @@ void playGamefun(){
         glRecti(50,450,750,600);
     glPopMatrix();
 
-    if(strcmp(hangmanWord,updateWord) == 0){
+    if(strcmp(hm.w.hangmanWord,hm.w.updateWord) == 0){
         onScreen::text(220,300,"You won the Game");
         wrongTry = 999;
         glutPostRedisplay();
         onScreen::text(220,275,"Press 'ESC' to go to Main Page");       
     }
     if(wrongTry == 5){
-        hm.man::drawHead();
+        hm.drawHead();
     }
     else if (wrongTry ==4)
     {
-        hm.man::drawHead();
-        hm.man::drawTorso();
+        hm.drawHead();
+        hm.drawTorso();
     }
     else if (wrongTry ==3)
     {
 
-        hm.man::drawHead();
-        hm.man::drawRArm();
-        hm.man::drawTorso();
+        hm.drawHead();
+        hm.drawRArm();
+        hm.drawTorso();
     }
     else if (wrongTry ==2){
-        hm.man::drawHead();
-        hm.man::drawRArm();
-        hm.man::drawLArm();	
-        hm.man::drawTorso();
+        hm.drawHead();
+        hm.drawRArm();
+        hm.drawLArm();	
+        hm.drawTorso();
     }
     else if (wrongTry ==1){
-        hm.man::drawHead();
-        hm.man::drawRLeg();
-        hm.man::drawTorso();
-        hm.man::drawRArm();
-        hm.man::drawLArm();
+        hm.drawHead();
+        hm.drawRLeg();
+        hm.drawTorso();
+        hm.drawRArm();
+        hm.drawLArm();
     }else if (wrongTry ==0 || wrongTry == -1){
-        hm.man::drawHead();
-        hm.man::drawLLeg();
-        hm.man::drawRLeg();
-        hm.man::drawTorso();
-        hm.man::drawRArm();
-        hm.man::drawLArm();
+        hm.drawHead();
+        hm.drawLLeg();
+        hm.drawRLeg();
+        hm.drawTorso();
+        hm.drawRArm();
+        hm.drawLArm();
         // When you want to return to start Page
         gameOver = 1;
         playGame = 0;
             
     } 
     glColor3f(1.0,0.0,0.0);
-    onScreen::text(250,500,updateWord);
+    onScreen::text(250,500,hm.w.updateWord);
     onScreen::text(70,450,meaning);
-    onScreen::text(200,150,"The Entered Charachters:");
-    onScreen::text(220,120,enteredText);
+    onScreen::text(200,150,"The Entered Characters:");
+    onScreen::text(220,120,hm.w.enteredText);
     
 
 }
@@ -135,9 +110,9 @@ void startPage(){
         glEnd();
         wrongTry = 6;
 
-        drawButton(300, 225, 500, 265,"Exit");
-        drawButton(300,265,500,305,"Instructions");
-        drawButton(300,305,500,345,"Play");
+        onScreen::drawButton(300, 225, 500, 265,"Exit");
+        onScreen::drawButton(300,265,500,305,"Instructions");
+        onScreen::drawButton(300,305,500,345,"Play");
         onScreen::text(275,350,"Let's Play");
         onScreen::text(230,310,"The Game Of Words");
     }
@@ -148,43 +123,37 @@ void startPage(){
 void winReshapeFcn (int newWidth, int newHeight)
 {
 glMatrixMode (GL_PROJECTION);
-glLoadIdentity( );
+glLoadIdentity();
 glViewport (0, 0, newWidth, newHeight);
 gluOrtho2D (0.0, (GLdouble) newWidth, 0.0, (GLdouble) newHeight);
 glClear (GL_COLOR_BUFFER_BIT);
 
 }
 
+
 void checkUsage(unsigned char key){
     int j;
     key = toupper(key);
     bool exist = false;
-    for(j = 0 ;enteredText[j]!='\0';j++){
-        if(key==enteredText[j]){
+    for(j = 0 ;hm.w.enteredText[j]!='\0';j++){
+        if(key==hm.w.enteredText[j]){
             exist = true;
             break;
         }
     }
-    if(j == strlen(enteredText) && exist == false){
+    if(j == strlen(hm.w.enteredText) && exist == false){
         // this letter is entered for the first time and is not in enteredText
         occur = 0;
     }
     if(!exist){
             for(j = 0;j<26;j++){
-                if(enteredText[j]=='\0'){
-                        enteredText[j]=key;
+                if(hm.w.enteredText[j]=='\0'){
+                        hm.w.enteredText[j]=key;
                         break;
                 }
             }
     }
 	glutPostRedisplay();
-}
-void update(unsigned char key){
-    for (int i=0;i<wordLen;i++){
-        if(hangmanWord[i] == key){
-            updateWord[i] = key;
-        }
-    }
 }
 
 void enter(unsigned char key,int x, int y){
@@ -194,9 +163,9 @@ void enter(unsigned char key,int x, int y){
     //if(wrongTry == 0)
     //  wrongTry--;
     
-    if(strchr(hangmanWord, key)){
+    if(strchr(hm.w.hangmanWord, key)){
         f=1;
-        update(key);
+        hm.w.update(key,wordLen);
     }
     if(f==0 && occur == 0){
     // reset occur to 1
@@ -255,7 +224,7 @@ void display(){
         playGamefun();
     }
     else if(gameOver == 1){
-        gameOverfun();
+        onScreen::gameOverfun(hm.w.hangmanWord);
     }
     else
     {

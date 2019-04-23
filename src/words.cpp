@@ -1,10 +1,10 @@
 #include "../include/words.h"
 #include "../include/global.h"
 
-words::words(){
-
-	/*static int wrongTry = 6;
-	static int i = rand();
-	strcpy(hangmanWord,"chocolate");
-	strcpy(updateWord,"-------") ; */
+void words::update(unsigned char key,int wordLen){
+    for (int i=0;i<wordLen;i++){
+        if(hangmanWord[i] == key){
+            updateWord[i] = key;
+        }
+    }
 }

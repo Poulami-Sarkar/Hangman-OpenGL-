@@ -1,7 +1,4 @@
-#include "../include/global.h"
 #include "../include/onScreen.h"
-#include "../include/man.h"
-#include "../include/words.h"
 
 void onScreen::text(GLfloat x,GLfloat y,char * updateWord)
 {
@@ -36,4 +33,31 @@ void onScreen::drawPixel(int x, int y){
     //sleep(1);
     glFlush();
 
+}
+
+void onScreen::gameOverfun(char *hangmanword){
+    glClear(GL_COLOR_BUFFER_BIT);
+    //glClearColor(1.0,1.0,1.0,0.3);
+    
+    onScreen::text(150,290,"You lost the game. Press any key to exit");
+    onScreen::text(200,260,"The word is:");
+    onScreen::text(300,260,hangmanword);
+}
+
+void onScreen::drawButton(int x0,int y0,int x1, int y1,char disp[]){
+    glPushMatrix();
+        glColor4f(0.9, 0.9, 0.0,1.0);
+        glRecti (x0, y0, x1, y1);
+        glLineWidth(3.0);
+        glColor4f(0.7, 0.7, 0.1,1.0);
+        glBegin(GL_LINES);
+            glVertex2i(x0,y0);
+            glVertex2i(x1,y0);
+        glEnd(); 
+        glPushMatrix();
+
+        glColor4f(0.0,0.0,0.8,1.0);
+        onScreen::text(x0-70,y0-30,disp);
+        glPopMatrix();
+    glPopMatrix();
 }

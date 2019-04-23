@@ -1,8 +1,4 @@
 #include "../include/man.h"
-#include "../include/global.h"
-#include "../include/words.h"
-
-
 
 void man::draw_line(GLfloat x0,GLfloat y0, GLfloat x1,GLfloat y1){
     glColor3f(1,0,1);
@@ -46,3 +42,8 @@ void man::drawLLeg(){
 void man::drawRLeg(){
 	draw_line(30,20,50,5);
 }	
+
+/*man::man(){
+	w.enteredText;
+	std::cout<<"Word is ()";;
+}*/

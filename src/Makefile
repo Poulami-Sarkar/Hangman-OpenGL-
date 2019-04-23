@@ -26,7 +26,7 @@ ifeq ($(UNAME_S),Darwin)
 endif
 
 # define the CPP source files
-SRCS = main.cpp onScreen.cpp man.cpp hangman.cpp
+SRCS =  words.cpp onScreen.cpp man.cpp hangman.cpp
 
 # define the CPP object files 
 #
