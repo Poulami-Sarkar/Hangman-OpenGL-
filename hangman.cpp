@@ -11,8 +11,8 @@
 //#include "hang.h"
 
 int wrongTry = 6;
-char hangmanWord[100] ="i like big butts and cannot lie";
-char tempWord[100]    ="- ---- --- ----- --- ------ ---" ;
+char hangmanWord[100] ="i like big butts and i cannot lie";
+char tempWord[100]    ="- ---- --- ----- --- - ------ ---" ;
 void showHangman(int);
 
 void text(GLfloat x,GLfloat y,char * tempWord)

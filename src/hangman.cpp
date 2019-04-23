@@ -3,12 +3,11 @@
 #include "../include/onScreen.h"
 //#include "../include/words.h"
 
-int wrongTry = 6,i = 0,wordLen,occur = 1,playGame = 0,sumCheckWord = 0,xM,yM,instructions = 0,quit= 0,gameOver = 0; // The no of attempts given to the Player,occur is 1 : is already in entered text;
+int wrongTry = 6,i = 0,wordLen,occur = 1,playGame = 0,xM,yM,instructions = 0,quit= 0,gameOver = 0; // The no of attempts given to the Player,occur is 1 : is already in entered text;
 char hangmanWord[20],updateWord[20],enteredText[50];// Stores the word that is chosen from the words.txt file
-int* checkWord;
 char meaning[200];
 char output[100][2][100];
-
+man hm;                                 //Hanged man
 
 void initialiseParams(){
     long int random;
@@ -23,20 +22,11 @@ void initialiseParams(){
     printf("The hangman: %s\n",hangmanWord);
     printf("The entered: %s\n",enteredText);
     wordLen = strlen(hangmanWord);
-    sumCheckWord = 0;
     wrongTry = 6;
-    checkWord = new int[wordLen];
-    for (int i = 0; i < wordLen ; i++){
-		checkWord[i]=0;
-	}
-
     for (int i=0;i<wordLen;i++){
         updateWord[i]='-';
     }
-    printf("The updateword: %s\n",updateWord);
-
-    
-    
+    printf("The updateword: %s\n",updateWord);  
 }
 void drawButton(int x0,int y0,int x1, int y1,char disp[]){
     glPushMatrix();
@@ -54,13 +44,11 @@ void drawButton(int x0,int y0,int x1, int y1,char disp[]){
         onScreen::text(x0-70,y0-30,disp);
         glPopMatrix();
     glPopMatrix();
-
-
 }
 
 void gameOverfun(){
     glClear(GL_COLOR_BUFFER_BIT);
-    glClearColor(1.0,1.0,1.0,0.3);
+    //glClearColor(1.0,1.0,1.0,0.3);
     
     onScreen::text(150,290,"You lost the game. Press any key to exit");
     onScreen::text(200,260,"The word is:");
@@ -74,46 +62,46 @@ void playGamefun(){
         glRecti(50,450,750,600);
     glPopMatrix();
 
-    if(sumCheckWord == wordLen){
+    if(strcmp(hangmanWord,updateWord) == 0){
         onScreen::text(220,300,"You won the Game");
         wrongTry = 999;
         glutPostRedisplay();
         onScreen::text(220,275,"Press 'ESC' to go to Main Page");       
     }
     if(wrongTry == 5){
-        man::drawHead();
+        hm.man::drawHead();
     }
     else if (wrongTry ==4)
     {
-        man::drawHead();
-        man::drawTorso();
+        hm.man::drawHead();
+        hm.man::drawTorso();
     }
     else if (wrongTry ==3)
     {
 
-        man::drawHead();
-        man::drawRArm();
-        man::drawTorso();
+        hm.man::drawHead();
+        hm.man::drawRArm();
+        hm.man::drawTorso();
     }
     else if (wrongTry ==2){
-        man::drawHead();
-        man::drawRArm();
-        man::drawLArm();	
-        man::drawTorso();
+        hm.man::drawHead();
+        hm.man::drawRArm();
+        hm.man::drawLArm();	
+        hm.man::drawTorso();
     }
     else if (wrongTry ==1){
-        man::drawHead();
-        man::drawRLeg();
-        man::drawTorso();
-        man::drawRArm();
-        man::drawLArm();
+        hm.man::drawHead();
+        hm.man::drawRLeg();
+        hm.man::drawTorso();
+        hm.man::drawRArm();
+        hm.man::drawLArm();
     }else if (wrongTry ==0 || wrongTry == -1){
-        man::drawHead();
-        man::drawLLeg();
-        man::drawRLeg();
-        man::drawTorso();
-        man::drawRArm();
-        man::drawLArm();
+        hm.man::drawHead();
+        hm.man::drawLLeg();
+        hm.man::drawRLeg();
+        hm.man::drawTorso();
+        hm.man::drawRArm();
+        hm.man::drawLArm();
         // When you want to return to start Page
         gameOver = 1;
         playGame = 0;
@@ -164,6 +152,7 @@ glLoadIdentity( );
 glViewport (0, 0, newWidth, newHeight);
 gluOrtho2D (0.0, (GLdouble) newWidth, 0.0, (GLdouble) newHeight);
 glClear (GL_COLOR_BUFFER_BIT);
+
 }
 
 void checkUsage(unsigned char key){
@@ -194,12 +183,7 @@ void update(unsigned char key){
     for (int i=0;i<wordLen;i++){
         if(hangmanWord[i] == key){
             updateWord[i] = key;
-            checkWord[i]=1;		
         }
-    }
-    sumCheckWord = 0;
-    for (int i = 0 ; i<wordLen;i++){
-        sumCheckWord += checkWord[i];
     }
 }
 
@@ -238,31 +222,29 @@ void mouseFunc(GLint button, GLint action, GLint xMouse, GLint yMouse)
     int x,y;
     x = 300;
     y = 365;
-
-    if ( xMouse > x && xMouse < x+200 && yMouse > y && yMouse < y+40){
-        if( button == GLUT_LEFT_BUTTON && action == GLUT_DOWN){
-            glClearColor(0.0f, 0.0f, 0.0f, 1.0f );
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            playGame = 1;
-            gameOver = 0;
+    if (playGame == 0){
+        if ( xMouse > x && xMouse < x+200 && yMouse > y && yMouse < y+40){
+            if( button == GLUT_LEFT_BUTTON && action == GLUT_DOWN){
+                glClearColor(0.0f, 0.0f, 0.0f, 1.0f );
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                playGame = 1;
+                gameOver = 0;
+            }
+        }
+        else if ( xMouse > x && xMouse < x+200 && yMouse > y+40 && yMouse < y+40*2){
+            if( button == GLUT_LEFT_BUTTON && action == GLUT_DOWN){
+                glClearColor(0.0f, 0.0f, 0.0f, 1.0f );
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                instructions = 1;
+            }
+        }else if ( xMouse > x && xMouse < x+200 && yMouse > y+40*2 && yMouse < y+40*3){
+            if( button == GLUT_LEFT_BUTTON && action == GLUT_DOWN){
+                quit = 1;
+            }
         }
     }
-    else if ( xMouse > x && xMouse < x+200 && yMouse > y+40 && yMouse < y+40*2){
-        if( button == GLUT_LEFT_BUTTON && action == GLUT_DOWN){
-            glClearColor(0.0f, 0.0f, 0.0f, 1.0f );
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            instructions = 1;
-        }
-    }else if ( xMouse > x && xMouse < x+200 && yMouse > y+40*2 && yMouse < y+40*3){
-        if( button == GLUT_LEFT_BUTTON && action == GLUT_DOWN){
-            quit = 1;
-        }
-    }
-
 glFlush();
 }
-
-
 
 void display(){
     glClear(GL_COLOR_BUFFER_BIT);
