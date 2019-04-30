@@ -13,16 +13,15 @@ void man::drawHead(){
 	glClearColor(0.0,0.0,0.0,1.0);
 	glPushMatrix();
     glLoadIdentity();
-	glTranslatef(30,70,00);
+	glTranslatef(80,80,00);
+	glTranslated(315.0,286.0,0);
 	glRotatef(30, 0, 0, 0.7);
-	//glColor3f(1.0,0.0,0.0);
-	glutWireSphere(20,100,100);
+	glutWireSphere(30,100,100);
 	glPopMatrix();
 }
 
 void man::drawTorso(){
 	draw_line(30,20,30,50);
-	//draw_cylinder(0.3,1.0,255,160,100);
 }
 
 void man::drawRArm(){
@@ -43,7 +42,15 @@ void man::drawRLeg(){
 	draw_line(30,20,50,5);
 }	
 
-/*man::man(){
-	w.enteredText;
-	std::cout<<"Word is ()";;
-}*/
+void man::drawgallow(int e){
+	if (e == 0)
+		draw_line(-10,5,50,5);
+	else{
+		draw_line(-10,5,5,5);
+		draw_line(5,5,10,-50);
+		
+	}
+	draw_line(0,5,0,100);
+	draw_line(0,100,30,100);
+	draw_line(30,100,30,90);	
+}

@@ -36,13 +36,25 @@ void onScreen::drawPixel(int x, int y){
 
 }
 
-void onScreen::gameOverfun(char *hangmanword){
+void onScreen::gameOverfun(char *hangmanword,man hm){
     glClear(GL_COLOR_BUFFER_BIT);
-    //glClearColor(1.0,1.0,1.0,0.3);
-    
-    onScreen::text(150,290,"You lost the game. Press any key to exit");
-    onScreen::text(200,260,"The word is:");
-    onScreen::text(300,260,hangmanword);
+    glMatrixMode (GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    glTranslated(350.0,260.0,0);
+    glScaled(1.5,1.5,0);
+    hm.drawgallow(1);
+    hm.drawHead();
+    hm.drawLLeg();
+    hm.drawRLeg();
+    hm.drawTorso();
+    hm.drawRArm();
+    hm.drawLArm();
+    glPopMatrix();
+    onScreen::text(150,450,"You lost the game. Press any key to exit");
+    onScreen::text(200,390,"The word is:");
+
+    onScreen::text(300,390,hangmanword);
 }
 
 void onScreen::drawButton(float dim[],char disp[]){
@@ -102,59 +114,63 @@ void onScreen::playGamefun(int *playGame,int *gameOver,man hm){
         glRecti(250,550,550,650);
         glRecti(50,450,750,600);
     glPopMatrix();
-
     if(strcmp(hm.w.hangmanWord,hm.w.updateWord) == 0){
         onScreen::text(220,300,"You won the Game");
         hm.w.wrongTry = 999;
         glutPostRedisplay();
         onScreen::text(220,275,"Press 'ESC' to go to Main Page");       
     }
-    if(hm.w.wrongTry == 5){
-        hm.drawHead();
-    }
-    else if (hm.w.wrongTry ==4)
-    {
-        hm.drawHead();
-        hm.drawTorso();
-    }
-    else if (hm.w.wrongTry ==3)
-    {
-
-        hm.drawHead();
-        hm.drawRArm();
-        hm.drawTorso();
-    }
-    else if (hm.w.wrongTry ==2){
-        hm.drawHead();
-        hm.drawRArm();
-        hm.drawLArm();	
-        hm.drawTorso();
-    }
-    else if (hm.w.wrongTry ==1){
-        hm.drawHead();
-        hm.drawRLeg();
-        hm.drawTorso();
-        hm.drawRArm();
-        hm.drawLArm();
-    }else if (hm.w.wrongTry ==0 || hm.w.wrongTry == -1){
-        hm.drawHead();
-        hm.drawLLeg();
-        hm.drawRLeg();
-        hm.drawTorso();
-        hm.drawRArm();
-        hm.drawLArm();
-        // When you want to return to start Page
-        *gameOver = 1;
-        *playGame = 0;
-            
+    glPushMatrix();
+    glTranslated(350.0,260.0,0);
+    glScaled(1.5,1.5,0);
+    hm.drawgallow(0);
+    switch(hm.w.wrongTry){
+        case 5:
+            glPushMatrix();
+            glTranslated(50.0,10.0,0);
+            hm.drawHead();
+            glPopMatrix();
+            break;
+        case 4:
+            hm.drawHead();
+            hm.drawTorso();
+            break;
+        case 3:
+            hm.drawHead();
+            hm.drawRArm();
+            hm.drawTorso();
+            break;
+        case 2:
+            hm.drawHead();
+            hm.drawRArm();
+            hm.drawLArm();	
+            hm.drawTorso();
+            break;
+        case 1:
+            hm.drawHead();
+            hm.drawRLeg();
+            hm.drawTorso();
+            hm.drawRArm();
+            hm.drawLArm();
+            break;
+        case 0:
+            hm.drawHead();
+            hm.drawLLeg();
+            hm.drawRLeg();
+            hm.drawTorso();
+            hm.drawRArm();
+            hm.drawLArm();
+            // When you want to return to start Page
+            *gameOver = 1;
+            *playGame = 0;          
     } 
+    glPopMatrix();
     glColor3f(0.86,0.83,0.74);
     onScreen::text(250,500,hm.w.updateWord);
     onScreen::text(70,450,hm.w.meaning);
     onScreen::text(200,150,"The Entered Characters:");
     onScreen::text(220,120,hm.w.enteredText);
 }
-
 onScreen::onScreen(){
     h = 800;
     w = 800;

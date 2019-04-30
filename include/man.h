@@ -16,6 +16,7 @@ class man {
 		void drawRArm();
 		void drawLLeg();
 		void drawRLeg();
+		void drawgallow(int);
 		void drawbase(int wrongTry);
 		void draw_line(GLfloat x0,GLfloat y0, GLfloat x1,GLfloat y1);
 };

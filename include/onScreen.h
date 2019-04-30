@@ -18,7 +18,7 @@ class onScreen{
 		void drawPixel (int x, int y);
 		onScreen();
 		void drawButton(float [],char disp[]);
-		void gameOverfun(char *hangmanword);
+		void gameOverfun(char *hangmanword,man);
 		void startPage(int playGame);
 		void playGamefun(int*,int* ,man);
 		//static void display();

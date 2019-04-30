@@ -91,12 +91,8 @@ void checkUsage(unsigned char key){
 
 void enter(unsigned char key,int x, int y){
     int f = 0;
-    //f  is 0: the key does not occur in hangmanWord
     checkUsage(key);
-    key = tolower(key);
-    //if(hm.w.wrongTry == 0)
-    //  hm.w.wrongTry--;
-    
+    key = tolower(key);    
     if(strchr(hm.w.hangmanWord, key)){
         f=1;
         hm.w.update(key,wordLen);
@@ -108,16 +104,12 @@ void enter(unsigned char key,int x, int y){
     }
     switch ( key )
     {
-        case 27: // Escape key
-            //int currentWindowID = glutGetWindow();
-            //glutDestroyWindow(currentWindowID);
-            //exit(0);
+        case 27: 
             playGame = 0;
             gameOver = 0;
             initialiseParams();
             break;
     }
-    
 }
 
 void mouseFunc(GLint button, GLint action, GLint xMouse, GLint yMouse)
@@ -159,7 +151,7 @@ void display(){
         screen.playGamefun(&playGame,&gameOver,hm);
     }
     else if(gameOver == 1){
-        screen.gameOverfun(hm.w.hangmanWord);
+        screen.gameOverfun(hm.w.hangmanWord,hm);
     }
     else
     {
