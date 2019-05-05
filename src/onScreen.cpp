@@ -16,7 +16,7 @@ void onScreen::text(GLfloat x,GLfloat y,char * updateWord)
     glLoadIdentity();
     //glRasterPos2i(x, y);
     glTranslatef(x,y,0);
-    glScalef(0.1*(float)w/800,0.2*(float)h/800,11);
+    glScalef(0.15*(float)w/1280,0.20*(float)h/960,40);
     //glColor3f(1.0, 1.0, 0.0);
     for ( i = 0; i <len; ++i )
         glutStrokeCharacter(GLUT_STROKE_ROMAN, menu[i]);
@@ -37,6 +37,7 @@ void onScreen::drawPixel(int x, int y){
 }
 
 void onScreen::gameOverfun(char *hangmanword,man hm){
+    int i = 0,stop;
     glClear(GL_COLOR_BUFFER_BIT);
     glMatrixMode (GL_MODELVIEW);
     glPushMatrix();
@@ -50,9 +51,10 @@ void onScreen::gameOverfun(char *hangmanword,man hm){
     hm.drawTorso();
     hm.drawRArm();
     hm.drawLArm();
+        
     glPopMatrix();
-    onScreen::text(150,450,"You lost the game. Press any key to exit");
-    onScreen::text(200,390,"The word is:");
+    onScreen::text(100,450,"You lost the game. Press any key to exit");
+    onScreen::text(120,390,"The word is:");
 
     onScreen::text(300,390,hangmanword);
 }
@@ -72,7 +74,7 @@ void onScreen::drawButton(float dim[],char disp[]){
         glPushMatrix();
 
         glColor4f(0.7,0.7,0.7,1.0);
-        onScreen::text(300-70*(float)w/800,y0-30*(float)h/800,disp);
+        onScreen::text(380-70*(float)w/800,y0-35*(float)h/800,disp);
         glPopMatrix();
     glPopMatrix();
 }
@@ -84,41 +86,53 @@ void onScreen::startPage(int playGame){
         glMatrixMode (GL_MODELVIEW);
         glPushMatrix();
             glColor4f(0.3, 0.3, 0.3,1.0);
-            glRecti (250, 350, 550, 450);
+            glRecti (400, 350, 1000, 450);
         glPopMatrix();
-        glColor4f(0.2, 0.3, 0.1,1.0);
+        glColor4f(0.3, 0.4, 0.2,1.0);
         glBegin(GL_LINES);
-            glVertex2i(500,345);
-            glVertex2i(300,345);
-            glVertex2i(300,225);
-            glVertex2i(300,345);
-            glVertex2i(500,225);
-            glVertex2i(500,345);
+            glVertex2i(550,345);
+            glVertex2i(800,345);
+            glVertex2i(800,225);
+            glVertex2i(800,345);
+            glVertex2i(550,225);
+            glVertex2i(550,345);
         glEnd();
        
         onScreen::drawButton(exit,"Exit");
         onScreen::drawButton(instr,"Instructions");
         onScreen::drawButton(play,"Play");
-        onScreen::text(275,350,"Let's Play");
-        onScreen::text(230,310,"The Game Of Words");
+        onScreen::text(220,350,"Let's Play");
+        onScreen::text(200,310,"The Game Of Words");
     }
     
 }
 
 
-void onScreen::playGamefun(int *playGame,int *gameOver,man hm){
+void onScreen::playGamefun(int *playGame,int *gameOver,int *score,man hm){
     // The box containing the updateWord
-    
+    char scr[20] = {0};
+    std::sprintf(scr, "%d", *score);
     glPushMatrix();
-        glColor3f(0.66,0.63,0.54);
-        glRecti(250,550,550,650);
-        glRecti(50,450,750,600);
+        glColor3f(0.3,0.2,0.1);
+        glTranslated(200,0,0);
+        glScaled(1.6,1.0,0.0);
+        glRecti(150,550,600,650);
+        glRecti(10,450,700,600);
     glPopMatrix();
+    glPushMatrix();
+        glColor3f(0.15,0.44,0.43);
+        glTranslated(-600,-200,0);
+        glRecti(1200,600,1350,700);
+    glPopMatrix();
+    
     if(strcmp(hm.w.hangmanWord,hm.w.updateWord) == 0){
-        onScreen::text(220,300,"You won the Game");
+        glColor3f(1.0,1.0,1.0);
+        onScreen::text(220,300,"You guessed it right!");
         hm.w.wrongTry = 999;
+        hm.w.correct = 1;
         glutPostRedisplay();
-        onScreen::text(220,275,"Press 'ESC' to go to Main Page");       
+        onScreen::text(220,275,"Right Click to go to next level");
+        onScreen::text(220,250,"Press 'ESC' to go to Main Page");
     }
     glPushMatrix();
     glTranslated(350.0,260.0,0);
@@ -127,7 +141,7 @@ void onScreen::playGamefun(int *playGame,int *gameOver,man hm){
     switch(hm.w.wrongTry){
         case 5:
             glPushMatrix();
-            glTranslated(50.0,10.0,0);
+            //glTranslated(-100.0,10.0,0);
             hm.drawHead();
             glPopMatrix();
             break;
@@ -167,15 +181,19 @@ void onScreen::playGamefun(int *playGame,int *gameOver,man hm){
     glPopMatrix();
     glColor3f(0.86,0.83,0.74);
     onScreen::text(250,500,hm.w.updateWord);
-    onScreen::text(70,450,hm.w.meaning);
+    onScreen::text(100,450,hm.w.meaning);
+    onScreen::text(270,400,"Score");
+    onScreen::text(290,350,scr);
     onScreen::text(200,150,"The Entered Characters:");
     onScreen::text(220,120,hm.w.enteredText);
 }
+
+
 onScreen::onScreen(){
     h = 800;
     w = 800;
-    ax0 = 300;
-    ax1 = 500;
+    ax0 = 600;
+    ax1 = 700;
     by0 = 400;
     by1 = 40;
     aspect = (float)h/(float)w;

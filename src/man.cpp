@@ -14,7 +14,7 @@ void man::drawHead(){
 	glPushMatrix();
     glLoadIdentity();
 	glTranslatef(80,80,00);
-	glTranslated(315.0,286.0,0);
+	glTranslated(300.0,282.0,0);
 	glRotatef(30, 0, 0, 0.7);
 	glutWireSphere(30,100,100);
 	glPopMatrix();
@@ -44,13 +44,15 @@ void man::drawRLeg(){
 
 void man::drawgallow(int e){
 	if (e == 0)
-		draw_line(-10,5,50,5);
+		draw_line(-15,5,50,5);// the bottom part
 	else{
-		draw_line(-10,5,5,5);
-		draw_line(5,5,10,-50);
+		draw_line(-15,5,2,5);
+		draw_line(2,5,10,-50);
 		
+	
 	}
-	draw_line(0,5,0,100);
-	draw_line(0,100,30,100);
+	
+	draw_line(-5,5,-5,100);
+	draw_line(-5,100,30,100);
 	draw_line(30,100,30,90);	
 }

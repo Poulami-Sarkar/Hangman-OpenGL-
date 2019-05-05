@@ -3,7 +3,7 @@
 #include "../include/onScreen.h"
 //#include "../include/words.h"
 
-int i = 0,wordLen,occur = 1,playGame = 0,xM,yM,instructions = 0,quit= 0,gameOver = 0; // The no of attempts given to the Player,occur is 1 : is already in entered text;
+int i = 0,wordLen,occur = 1,playGame = 0,xM,yM,instructions = 0,quit= 0,gameOver = 0,score=0; // The no of attempts given to the Player,occur is 1 : is already in entered text;
 onScreen screen;
 // Stores the word that is chosen from the words.txt file
 //char meaning[200];
@@ -15,11 +15,8 @@ void initialiseParams(){
     srand(time(NULL));
     random1 = rand();
     srand(time(NULL));
-    random2 = (rand()*random1)%32;
-
+    random2 = (rand()*random1)%30;
     printf("The random no generated: %d\n",random2);
-    printf("%d %d %f",screen.h,screen.w,screen.aspect);
-
     strcpy(hm.w.hangmanWord,output[random2][0]);
     strcpy(hm.w.meaning,output[random2][1]);
     strncpy(hm.w.enteredText,"",sizeof(hm.w.enteredText));
@@ -44,15 +41,15 @@ void winReshapeFcn (int newWidth, int newHeight)
     glViewport (0, 0,newWidth, newHeight);
     gluOrtho2D (0.0,newWidth, 0.0,newHeight);
     if (screen.w != newWidth) {
-        screen.ax0 = ((float)newWidth/(float)800)*(float)300;
-        screen.ax1 = ((float)newWidth/(float)800)*(float)500;
+        screen.ax0 =(((float)newWidth + 100)/(float)800)*(float)300;
+        screen.ax1 = (((float)newWidth)/(float)800)*(float)500;
         if (newWidth == 1280){
-            screen.by0 = 450;
+            screen.by0 = 550;
             screen.by1 = ((float)newHeight/(float)800.0)*(float)40.0;
             printf("reshape:%f %f",screen.by0,screen.by1);
         }
         else{
-            screen.by0 = 400;
+            screen.by0 = 550;
             screen.by1 = ((float)newHeight/(float)800.0)*(float)40.0;
             printf("reshape:%f %f",screen.by0,screen.by1);
         }
@@ -107,19 +104,32 @@ void enter(unsigned char key,int x, int y){
         case 27: 
             playGame = 0;
             gameOver = 0;
+            instructions = 0;
+            score = 0;
             initialiseParams();
             break;
+        case 'n':
+            instructions++;
+            break;
+        case 'p':
+            instructions--;
     }
 }
 
 void mouseFunc(GLint button, GLint action, GLint xMouse, GLint yMouse)
 { 
-    int x,y;
+    int x,y,add;
     x = screen.exit[0];
     y = screen.play[3];
-    printf("%f %f",screen.ax0,screen.ax1);
+    if(button == GLUT_LEFT_BUTTON && action == GLUT_DOWN)
+        printf("Click one %d %d",xMouse,yMouse);
+    screen.by0 = 365;
+    screen.by1 = 405;
+    screen.ax0 = 550;
+    screen.ax1 = 850;
+    add = 40;
     if (playGame == 0){
-        if ( xMouse > screen.ax0 && xMouse < screen.ax1 && yMouse > screen.by0 && yMouse < screen.by1+screen.by0){
+        if ( xMouse > screen.ax0 && xMouse < screen.ax1 && yMouse > screen.by0 && yMouse < screen.by1){
             if( button == GLUT_LEFT_BUTTON && action == GLUT_DOWN){
                 glClearColor(0.50f, 0.42f, 0.35f, 1.0f );
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -127,20 +137,49 @@ void mouseFunc(GLint button, GLint action, GLint xMouse, GLint yMouse)
                 gameOver = 0;
             }
         }
-        else if ( xMouse > screen.ax0 && xMouse < screen.ax1 && yMouse > screen.by1+screen.by0 && yMouse < screen.by1*2+screen.by0){
+        else if ( xMouse > screen.ax0 && xMouse < screen.ax1 && yMouse > screen.by0+add && yMouse < screen.by1+add){
             if( button == GLUT_LEFT_BUTTON && action == GLUT_DOWN){
                 glClearColor(0.0f, 0.0f, 0.0f, 1.0f );
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                 instructions = 1;
             }
-        }else if ( xMouse > screen.ax0 && xMouse < screen.ax1 && yMouse > screen.by1*2+screen.by0 && screen.by1*3+screen.by0){
+        }else if ( xMouse > screen.ax0 && xMouse < screen.ax1 && yMouse > screen.by0+2*add && screen.by1+2*add){
             if( button == GLUT_LEFT_BUTTON && action == GLUT_DOWN){
                 quit = 1;
             }
         }
     }
+    
+    if(button == GLUT_RIGHT_BUTTON && action == GLUT_DOWN && playGame == 1){
+           // if(hm.w.correct == 1){
+                initialiseParams();
+                ++score;
+                playGame = 1;
+            //}
+            
+    }
 glFlush();
 }
+
+void instructionsfun(){
+    glColor3f(1.0,0,0);
+    screen.text(20,550,"Press 'P' to go to previous and 'N' to go to next");
+    glColor3f(0.0,0.0,0.0);
+
+    if(instructions == 1){
+        for(int i =0;i<20;i++){
+            screen.text(20,500-i*25,output[i][0]);
+            screen.text(120,500-i*25,output[i][1]);
+        }
+    } else if(instructions != 1){
+        for(int i =0;i<20;i++){
+            screen.text(20,500-i*25,output[i+20][0]);
+            screen.text(120,500-i*25,output[i+20][1]);
+        }
+    }
+    
+}
+
 
 void display(){
     glClear(GL_COLOR_BUFFER_BIT);
@@ -148,10 +187,15 @@ void display(){
         exit(0);
     }
     if(playGame == 1 && gameOver == 0){
-        screen.playGamefun(&playGame,&gameOver,hm);
+        screen.playGamefun(&playGame,&gameOver,&score,hm);
+        
     }
     else if(gameOver == 1){
         screen.gameOverfun(hm.w.hangmanWord,hm);
+    }
+    else if (instructions == 1 || instructions == 2){
+        glClearColor(1.0,1.0,1.0,1.0);
+        instructionsfun();
     }
     else
     {
@@ -167,7 +211,7 @@ void init() {
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(0.6,0.1,0.1,1.0);
     glMatrixMode(GL_PROJECTION);
-    gluOrtho2D(0,350,0,350);
+    gluOrtho2D(0,640,0,480);
     glLineWidth(4.0);
     
 }
@@ -186,7 +230,9 @@ int main(int argc,char **argv) {
     initialiseParams();
     glutInit(&argc,argv);
     glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB);
-    glutInitWindowSize(screen.w,screen.h);
+    glutInitWindowSize(1280,960);
+    screen.w = 1280;
+    screen.h = 960;
     glutInitWindowPosition(0,0);
     glutCreateWindow("Hangman");
     init();
