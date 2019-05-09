@@ -8,7 +8,7 @@
 
 class onScreen{
 	public:
-		float exit[4] = {300, 225, 500, 265}, instr[4]={300, 265, 500, 305},play[4]={300, 305, 500, 345};
+		float exit[4] = {550, 225, 850, 265}, instr[4]={550, 265, 850, 305},play[4]={550, 305, 850, 345};
 		float by0,by1,ax0,ax1;
 		//int x1, x2, y1, y2;
 		int h, w;
@@ -20,7 +20,8 @@ class onScreen{
 		void drawButton(float [],char disp[]);
 		void gameOverfun(char *hangmanword,man);
 		void startPage(int playGame);
-		void playGamefun(int*,int* ,man);
+		void playGamefun(int*,int*,int*,man);
+
 		//static void display();
 
 };

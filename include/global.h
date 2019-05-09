@@ -18,14 +18,11 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <ctime>
 //#include <unistd>
 
 #ifndef PI
 #define PI 3.1415926535897932384626433832795
 #endif
-
-#define RAD(x)          (PI*(x)/180)
-#define GRAUS(x)        (180*(x)/PI) //Degrees
-
 
 #endif
