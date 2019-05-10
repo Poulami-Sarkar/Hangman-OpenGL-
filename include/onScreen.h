@@ -20,8 +20,8 @@ class onScreen{
 		void drawButton(float [],char disp[]);
 		void gameOverfun(char *hangmanword,man);
 		void startPage(int playGame);
-		void playGamefun(int*,int*,int*,man);
-
+		void playGamefun(int*,int*,int&,man&);
+		void ourInfo(int&);
 		//static void display();
 
 };
